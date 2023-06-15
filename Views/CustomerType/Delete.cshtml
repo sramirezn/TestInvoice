@@ -1,0 +1,32 @@
+﻿@model TestInvoice.Models.CustomerType
+
+@{
+    ViewBag.Title = "Delete Customer Type";
+}
+
+<h2>Delete Customer Type</h2>
+
+<p>Are you sure you want to delete this customer type?</p>
+
+<div>
+    <h4>Customer Type</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    }
+</div>

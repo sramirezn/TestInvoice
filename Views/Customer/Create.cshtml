@@ -1,0 +1,39 @@
+﻿@model TestInvoice.Models.Customer
+
+<h2>Create Customer</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CustName)
+        @Html.TextBoxFor(model => model.CustName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.CustName)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Adress)
+        @Html.TextBoxFor(model => model.Adress, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Adress)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Status)
+        @Html.CheckBoxFor(model => model.Status)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CustomerTypeId)
+        @Html.DropDownListFor(model => model.CustomerTypeId, ViewBag.CustomerTypes as SelectList, "Select Customer Type", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.CustomerTypeId)
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

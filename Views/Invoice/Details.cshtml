@@ -1,0 +1,60 @@
+﻿@model TestInvoice.Models.Invoice
+
+@{
+    ViewBag.Title = "Invoice Details";
+}
+
+<h2>Invoice Details</h2>
+
+<div>
+    <h4>Invoice</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Invoice ID</dt>
+        <dd>@Html.DisplayFor(model => model.Id)</dd>
+
+        <dt>Customer name</dt>
+        <dd>@Html.DisplayFor(model => model.Customer.CustName)</dd>
+
+        <dt>Total ITBIS</dt>
+        <dd>@Html.DisplayFor(model => model.TotalItbis)</dd>
+
+        <dt>SubTotal</dt>
+        <dd>@Html.DisplayFor(model => model.SubTotal)</dd>
+
+        <dt>Total</dt>
+        <dd>@Html.DisplayFor(model => model.Total)</dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Invoice Items</h4>
+    <table class="table">
+        <thead>
+            <tr>
+               
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total ITBIS</th>
+                <th>SubTotal</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.InvoiceDetails)
+            {
+                <tr>
+                    
+                    <td>@Html.DisplayFor(modelItem => item.Qty)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TotalItbis)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SubTotal)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Total)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div
+    @Html.ActionLink("Back to List", "Index")
+</div>

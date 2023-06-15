@@ -1,0 +1,132 @@
+﻿@model TestInvoice.Models.InvoiceViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create Invoice</h2>
+
+@using (Html.BeginForm("Create", "Invoice", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.SelectedCustomerId, "Customer", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.SelectedCustomerId, ViewBag.CustomerId as SelectList, "Select Customer", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.SelectedCustomerId)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.InvoiceItems, "Invoice Items", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <table id="invoiceItemsTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>TotalItbis</th>
+                        <th>SubTotal</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="invoiceItemsBody">
+                    <tr>
+                        <td>
+                            <input type="text" name="InvoiceItems[0].Qty" class="form-control qty-input" />
+                            @Html.ValidationMessageFor(model => model.InvoiceItems[0].Qty, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <input type="text" name="InvoiceItems[0].Price" class="form-control price-input" />
+                            @Html.ValidationMessageFor(model => model.InvoiceItems[0].Price, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <input type="text" name="InvoiceItems[0].TotalItbis" class="form-control total-itbis-input" readonly="readonly"  />
+                            @Html.ValidationMessageFor(model => model.InvoiceItems[0].TotalItbis, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <input type="text" name="InvoiceItems[0].SubTotal" class="form-control sub-total-input" readonly="readonly"  />
+                            @Html.ValidationMessageFor(model => model.InvoiceItems[0].SubTotal, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <input type="text" name="InvoiceItems[0].Total" class="form-control total-input" readonly="readonly"  />
+                            @Html.ValidationMessageFor(model => model.InvoiceItems[0].Total, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm delete-item">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <button type="button" class="btn btn-primary btn-sm" id="addNewItem">Add New Item</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}
+@section Scripts {
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var index = 1;
+
+        function calculateValues() {
+            var row = $(this).is('tr') ? $(this) : $(this).closest('tr');
+            var qty = parseFloat(row.find(".qty-input").val()) || 0;
+            var price = parseFloat(row.find(".price-input").val()) || 0;
+
+            var totalItbis = qty * price * 0.18;
+            var subTotal = qty * price;
+            var total = subTotal + totalItbis;
+
+            row.find(".total-itbis-input").val(totalItbis.toFixed(2));
+            row.find(".sub-total-input").val(subTotal.toFixed(2));
+            row.find(".total-input").val(total.toFixed(2));
+        }
+
+        function calculateForAllRows() {
+            $("#invoiceItemsTable tbody tr").each(calculateValues);
+        }
+
+        $("#addNewItem").click(function () {
+            var newRow = $("<tr>");
+            var cols = "";
+
+            cols += '<td><input type="text" name="InvoiceItems[' + index + '].Qty" class="form-control qty-input" /></td>';
+            cols += '<td><input type="text" name="InvoiceItems[' + index + '].Price" class="form-control price-input" /></td>';
+            cols += '<td><input type="text" name="InvoiceItems[' + index + '].TotalItbis" class="form-control total-itbis-input" readonly /></td>';
+            cols += '<td><input type="text" name="InvoiceItems[' + index + '].SubTotal" class="form-control sub-total-input" readonly /></td>';
+            cols += '<td><input type="text" name="InvoiceItems[' + index + '].Total" class="form-control total-input" readonly /></td>';
+            cols += '<td><button type="button" class="btn btn-danger btn-sm delete-item">Delete</button></td>';
+
+            newRow.append(cols);
+            $("#invoiceItemsTable tbody").append(newRow);
+            index++;
+
+            calculateForAllRows();
+        });
+
+        $("#invoiceItemsTable tbody").on("click", ".delete-item", function () {
+            $(this).closest("tr").remove();
+        });
+
+        $(document).on("input", ".qty-input, .price-input", function () {
+            calculateValues.call(this);
+        });
+    });
+</script>
+}
+
